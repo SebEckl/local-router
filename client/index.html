@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <title>local-router</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+      input{
+        max-width: 150px;
+      }
+
+      li:hover{
+        cursor:pointer;
+        opacity: 0.7;
+      }
+
+      .isSelected{
+        text-decoration: underline;
+      }
+    </style>
+          
+</head>
+
+<body>
+  <section class="text-left pt-md-5 pb-md-4">
+
+    <h1 style="margin-left: 50px;">TEST</h1>
+
+  </section>
+
+  <!--input fields for start and destination-->
+  <div  style="float: left; margin-left: 50px;" >
+
+    <b>Start:</b><br>
+    <label for="startlg">LG:</label>
+    <input type="text" id="startlg" name="startlg">   
+    <label for="startbg">BG:</label>
+    <input type="text" id="startbg" name="startbg"><br><br>
+
+    <b>Ziel:</b><br>
+    <label for="ziellg">LG:</label>
+    <input type="text" id="ziellg" name="ziellg">   
+    <label for="zielbg">BG:</label>
+    <input type="text" id="zielbg" name="zielbg"><br><br>
+    <button class="submit">Go!</button><br><br>
+
+    <button class="ziel1">Uni-Tü -> HS-R</button>
+    <button class="ziel2">Hbf-R -> HS-R</button><br><br><br>
+    <p id="duration"></p>
+    <p id="length"></p>
+
+  </div>
+
+  <!--list of directions-->
+  <div  style="float: left; margin-left: 50px;" >
+
+    <ul id="directionList">
+    </ul></br>  
+    <p id="coordinates"></p>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+  <script>
+
+    //submit entered coordinates and display resulting duration and length
+    $('.submit').click(function (e) {
+      var startlg = document.getElementById("startlg").value;
+      var startbg = document.getElementById("startbg").value;
+      var ziellg = document.getElementById("ziellg").value;
+      var zielbg = document.getElementById("zielbg").value;
+      $.get('/getRoute1', { startlg: startlg, startbg: startbg, ziellg: ziellg, zielbg: zielbg }, function (data) {
+
+        $('ul').empty();
+        $('#coordinates').empty();
+        $('#duration').empty();
+        $('#length').empty();
+      
+        document.getElementById("duration").textContent = "Dauer: "+ data.duration
+        document.getElementById("length").textContent = "Strecke: "+ data.length+ " km"
+        displayRoute(data.instructions);
+      })
+    });
+
+    //disply list of directions + add click functionality to display their coordinates
+    function displayRoute (directions){
+      var ul = document.getElementById("directionList");
+      directions.forEach(function(direction) {
+        let li = document.createElement('li');
+        li.textContent = direction.name;
+        li.addEventListener("click",function(e) {
+          document.getElementById("coordinates").textContent = direction.lgbg
+          $(" li").removeClass("isSelected");
+          $(this).addClass("isSelected");
+        });
+        ul.appendChild(li)
+      })
+    }
+
+    //automatically enter predefined routes
+    //Uni-Tü -> HS-R 
+    $('.ziel1').click(function (e) {
+      document.getElementById("startlg").setAttribute('value','9.060815306552715');
+      document.getElementById("startbg").setAttribute('value','48.52552357941232');
+      document.getElementById("ziellg").setAttribute('value','9.187063068950867');
+      document.getElementById("zielbg").setAttribute('value','48.48206054111112');
+    });
+    //Hbf -> HS-R  
+    $('.ziel2').click(function (e) {
+      document.getElementById("startlg").setAttribute('value','9.209484457314195');
+      document.getElementById("startbg").setAttribute('value','48.49606826360642');
+      document.getElementById("ziellg").setAttribute('value','9.187063068950867');
+      document.getElementById("zielbg").setAttribute('value','48.48206054111112');
+    });
+  </script>
+
+</body>
+
+</html>

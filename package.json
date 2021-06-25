@@ -1,0 +1,39 @@
+{
+  "name": "local-router",
+  "version": "0.0.0",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "node-fetch": "^2.6.1",
+    "open": "^7.3.1",
+    "osrm-text-instructions": "^0.14.1-beta.3",
+    "pkg": "^4.4.9"
+  },
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "pkg": {
+    "scripts": [
+      "client/*.js",
+      "client/assets/js/*",
+      "client/assets/js/components/charts/*"
+    ],
+    "assets": [
+      "client/*",
+      "client/assets/css/*",
+      "client/assets/css/bootstrap/*",
+      "client/assets/vendor/nucelo/fonts/*",
+      "client/assets/vendor/nucleo/css/*"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
